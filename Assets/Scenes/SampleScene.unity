@@ -3296,7 +3296,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1573486844}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 476964894}
+        m_TargetAssemblyTypeName: GameController, Assembly-CSharp
+        m_MethodName: LaunchBigBomb
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1573486844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3474,10 +3486,12 @@ MonoBehaviour:
   - {fileID: 1260450236}
   - {fileID: 977406668}
   currDescription: {fileID: 2125002550}
+  currItemCost: {fileID: 0}
   purchaseButton: {fileID: 1849922377}
   autoClickerManager: {fileID: 1285779035}
   bigBombManager: {fileID: 1429811706}
   bonusOnSpawnManager: {fileID: 1356333948}
+  scoreManager: {fileID: 1635759947}
 --- !u!1001 &1606577519
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3716,6 +3730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 871602136}
+  shopManager: {fileID: 1585386844}
 --- !u!114 &1635759948
 MonoBehaviour:
   m_ObjectHideFlags: 0

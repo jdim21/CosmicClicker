@@ -7,39 +7,52 @@ using TMPro;
 public class ScoreManager : MonoBehaviour
 {
     public TMP_Text scoreText;
+    public ShopManager shopManager;
 
     int score = 0;
 
-    // Start is called before the first frame update
     void Start()
     {
         scoreText.text = "SCORE: " + score.ToString();
     }
 
-    // Update is called once per frame
-    void Update()
+    public int GetScore()
     {
-        
+        return score;
     }
 
     public void addToScore(int toAdd)
     {
         score = score + toAdd;
-        if (score >= 1000000000)
+        scoreText.text = GetNumPrinted(score);
+        shopManager.CheckPurchasable();
+    }
+
+    public string GetNumPrinted(int num)
+    {
+        string returnStr = "";
+        if (num >= 1000000000)
         {
-            scoreText.text = "SCORE: " + ((float)score / 1000000000f).ToString() + "B";
+            returnStr = "SCORE: " + ((float)score / 1000000000f).ToString() + "B";
         }
         else if (score >= 1000000)
         {
-            scoreText.text = "SCORE: " + ((float)score / 1000000f).ToString() + "M";
+            returnStr = "SCORE: " + ((float)score / 1000000f).ToString() + "M";
         }
         else if (score >= 1000)
         {
-            scoreText.text = "SCORE: " + ((float)score / 1000f).ToString() + "K";
+            returnStr = "SCORE: " + ((float)score / 1000f).ToString() + "K";
         }
         else
         {
-            scoreText.text = "SCORE: " + score.ToString();
+            returnStr = "SCORE: " + score.ToString();
         }
+        return returnStr;
+    }
+
+    public void SubFromScore(int toSub)
+    {
+        score = score - toSub;
+        scoreText.text = GetNumPrinted(score);
     }
 }

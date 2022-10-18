@@ -98,6 +98,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1579582731895787540}
   costText: {fileID: 58961539768586847}
   itemIcon: {fileID: 7243206031440262168}
+  itemType: 0
 --- !u!1 &58961539768586845
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,7 +196,7 @@ MonoBehaviour:
   m_fontSizeBase: 26
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 12
   m_fontSizeMax: 26
   m_fontStyle: 0
   m_HorizontalAlignment: 2

@@ -79,6 +79,11 @@ public class HealthBarController : MonoBehaviour
         return healthAmount;
     }
 
+    public int GetMaxHealth()
+    {
+        return healthAmountMax;
+    }
+
     public float GetHealthNormalized()
     {
         return (float)healthAmount / (float)healthAmountMax;

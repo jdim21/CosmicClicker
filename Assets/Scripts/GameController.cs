@@ -30,7 +30,6 @@ public class GameController : MonoBehaviour
     private Vector3 currentClickableVelocity;
     private float lootBagFlickerSpeed = 0.05f;
     private float autoClickerDamageTimer;
-    private int numberOfBigBombs = 0;
 
     void Start()
     {
@@ -43,6 +42,27 @@ public class GameController : MonoBehaviour
     {
         HandleAutoClicker();
 
+        HandleClickableMovement();
+
+        HandleNewClick();
+
+        HandleLootBag();
+    }
+
+    private void HandleCurrentClickableDestroyed()
+    {
+        int rand = UnityEngine.Random.Range(1, 10);
+        if (rand <= 5)
+        {
+            SpawnNewLootBag();
+        }
+        Destroy(currentClickable.gameObject);
+        clickablesDestroyed++;
+        Invoke("SpawnNewClickable", 0.3f);
+    }
+
+    private void HandleClickableMovement()
+    {
         if (currentClickable != null)
         {
             currentClickable.position += currentClickableVelocity * Time.deltaTime;
@@ -55,7 +75,10 @@ public class GameController : MonoBehaviour
                 currentClickableVelocity.y *= -1;
             }
         }
+    }
 
+    private void HandleNewClick()
+    {
         if(Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -94,9 +117,11 @@ public class GameController : MonoBehaviour
                 LootBagPopup.Create(spawnLocation, "+" + randUpgradeDamage.ToString() + " DPC");
                 Destroy(currentLootBag.gameObject);
             }
-
         }
+    }
 
+    private void HandleLootBag()
+    {
         if (currentLootBag != null)
         {
             lootBagFadeTimer -= Time.deltaTime;
@@ -123,23 +148,10 @@ public class GameController : MonoBehaviour
             lootBagLight.intensity += lootBagFlickerSpeed;
         }
     }
-
-    private void HandleCurrentClickableDestroyed()
-    {
-        int rand = UnityEngine.Random.Range(1, 10);
-        if (rand <= 5)
-        {
-            SpawnNewLootBag();
-        }
-        Destroy(currentClickable.gameObject);
-        clickablesDestroyed++;
-        Invoke("SpawnNewClickable", 0.3f);
-    }
-
     private void HandleAutoClicker()
     {
         autoClickerDamageTimer -= Time.deltaTime;
-        if (autoClickerDamageTimer <= 0)
+        if (autoClickerDamageTimer <= 0 && currentClickable != null)
         {
             int autoClickerDamagePerSecond = autoClickerManager.GetAutoClickerDamagerPerSecond();
             if (autoClickerDamagePerSecond > 0)
@@ -157,6 +169,24 @@ public class GameController : MonoBehaviour
                 }
             }
             autoClickerDamageTimer = AUTO_CLICKER_DAMAGE_TIMER_MAX;
+        }
+    }
+
+    public void LaunchBigBomb()
+    {
+        if (bigBombManager.GetBigBombs() >= 1)
+        {
+            bigBombManager.UsedBigBomb();
+            int currBigBombDamage = (int)(bigBombManager.GetBigBombDamagePercentage() * (float)healthBarController.GetMaxHealth() / 100f);
+            scoreManager.addToScore((int)Math.Min((float)currBigBombDamage, (float)healthBarController.GetHealth()));
+            Vector3 spawnLocation = currentClickable.position;
+            DamagePopup.Create(spawnLocation, currBigBombDamage);
+            healthBarController.Damage(currBigBombDamage);
+            
+            if (healthBarController.IsDestroyed())
+            {
+                HandleCurrentClickableDestroyed();
+            }
         }
     }
 
