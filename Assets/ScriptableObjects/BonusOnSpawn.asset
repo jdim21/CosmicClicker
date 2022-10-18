@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74c59c6c48e54844eb7dd1bec0f9f9c1, type: 3}
+  m_Name: BonusOnSpawn
+  m_EditorClassIdentifier: 
+  itemName: BonusOnSpawn
+  description: Deals bonus damage when a new clickable is spawned
+  icon: {fileID: 21300000, guid: e8cf2fe956800b54496a4b0981fdcd23, type: 3}
+  baseCost: 200
+  selectedItemType: 2

@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6008492669072309689
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6008492669072309691}
+  - component: {fileID: 6008492669072309688}
+  m_Layer: 0
+  m_Name: GameAssets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6008492669072309691
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6008492669072309689}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.07375126, y: 1.3921403, z: -139.93079}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6008492669072309688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6008492669072309689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 248af67a2e4b1c44ea25b0b6188181a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pfDamagePopup: {fileID: 2154244818543483880, guid: d2279605696e3734a9a397c5d50af4cb, type: 3}
+  pfMashedPotatoes: {fileID: 4116728285300917064, guid: 371b2b8464d687043a297d4be95210b1, type: 3}
+  pfCottonCandyPlanet: {fileID: 4116728285300917064, guid: 1d7272256d683b24abc1548e779c1163, type: 3}
+  pfBlueGreenPlanet: {fileID: 4116728285300917064, guid: 790c146e2999d1a449a6f57cf109e4ac, type: 3}
+  pfGreenPlanet: {fileID: 4116728285300917064, guid: 8a6b72eb159b9b54a9538236d86a3fd3, type: 3}
+  pfGreenPurplePlanet: {fileID: 4116728285300917064, guid: 3db453c0e1d4d7645bc57b8ff871ca3f, type: 3}
+  pfGreenRedPlanet: {fileID: 4116728285300917064, guid: aaeeb84b1ce71bf4cacd003169bf43a9, type: 3}
+  pfRedBluePlanet: {fileID: 4116728285300917064, guid: f62b3dac6414f2542b4ff9fd74d3b315, type: 3}
+  pfRedPlanet: {fileID: 4116728285300917064, guid: a467e4a2b260b454391eadfc43628a7d, type: 3}
+  pfYellowBluePlanet: {fileID: 4116728285300917064, guid: adeb29a2610354e458a840d58f932785, type: 3}
+  pfYellowPlanet: {fileID: 4116728285300917064, guid: 90646ba0b9124b346b6d6d49e787c762, type: 3}
+  pfYellowRedPlanet: {fileID: 4116728285300917064, guid: d1fcceea3830f26469990c5ff2283a31, type: 3}
+  pfLootBag: {fileID: 4116728285300917064, guid: e019a6c79c9fa0d43ba1e7355df988a3, type: 3}
+  pfLootBagText: {fileID: 2154244818543483880, guid: d83c6037eec9eca4099212209d0f75cb, type: 3}
+  pfComet1: {fileID: 4116728285300917064, guid: d8befbaaf2597de4593b9abbb0355fe7, type: 3}
+  pfAsteroid1: {fileID: 4116728285300917064, guid: f5e6c79e4682a474295f17c9b1a1078b, type: 3}
