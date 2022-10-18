@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     private const float AUTO_CLICKER_DAMAGE_TIMER_MAX = 1.0f;
     private Transform currentClickable;
     private Transform currentLootBag;
+    private Transform currentBonusLootBag;
     public AutoClickerManager autoClickerManager;
     public BackgroundClickableManager backgroundClickableManager;
     public BigBombManager bigBombManager;
@@ -174,7 +175,7 @@ public class GameController : MonoBehaviour
 
     public void LaunchBigBomb()
     {
-        if (bigBombManager.GetBigBombs() >= 1)
+        if (bigBombManager.GetBigBombs() >= 1 && currentClickable != null)
         {
             bigBombManager.UsedBigBomb();
             int currBigBombDamage = (int)(bigBombManager.GetBigBombDamagePercentage() * (float)healthBarController.GetMaxHealth() / 100f);
@@ -311,5 +312,17 @@ public class GameController : MonoBehaviour
         lootBagFadeTimer = LOOT_BAG_FADE_TIMER_MAX;
         lootBagColor = currentLootBag.GetComponent<SpriteRenderer>().color;
         lootBagImage = currentLootBag.GetComponent<SpriteRenderer>();
+
+        if (currentBonusLootBag != null)
+        {
+            Destroy(currentBonusLootBag.gameObject);
+        }
+        Vector3 bonusSpawnLocation = spawnLocation;
+        bonusSpawnLocation.x = bonusSpawnLocation.x + 0.25f;
+        // TODO: do random stuff
+        if (true)
+        {
+            currentBonusLootBag = Instantiate(GameAssets.i.pfLootBag, bonusSpawnLocation, Quaternion.identity); 
+        }
     }
 }
