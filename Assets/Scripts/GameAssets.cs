@@ -22,6 +22,7 @@ public class GameAssets : MonoBehaviour
     public Transform pfLootBagText;
     public Transform pfComet1;
     public Transform pfAsteroid1;
+    public Transform pfPrecisionTarget;
     public Sprite enhancementTypePotency;
     public Sprite enhancementTypeFocus;
     public Sprite enhancementTypeTimed;

@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
     private Transform currentClickable;
     private Transform currentLootBag;
     private Transform currentBonusLootBag;
+    private Transform currentPrecisionTarget;
     public AutoClickerManager autoClickerManager;
     public BackgroundClickableManager backgroundClickableManager;
     public BigBombManager bigBombManager;
@@ -368,6 +369,12 @@ public class GameController : MonoBehaviour
         if (bonusOnSpawnManager.GetBonusOnSpawn() > 0)
         {
             Invoke("HandleBonusOnSpawn", 0.3f);
+        }
+        if (false) // TODO: precision enhancement only
+        {
+            currentPrecisionTarget = Instantiate(GameAssets.i.pfPrecisionTarget);
+            currentPrecisionTarget.parent = currentClickable;
+            currentPrecisionTarget.localPosition = new Vector3(0, 0, -1);
         }
     }
 

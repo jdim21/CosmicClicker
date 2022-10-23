@@ -61,6 +61,7 @@ MonoBehaviour:
   pfLootBagText: {fileID: 2154244818543483880, guid: d83c6037eec9eca4099212209d0f75cb, type: 3}
   pfComet1: {fileID: 4116728285300917064, guid: d8befbaaf2597de4593b9abbb0355fe7, type: 3}
   pfAsteroid1: {fileID: 4116728285300917064, guid: f5e6c79e4682a474295f17c9b1a1078b, type: 3}
+  pfPrecisionTarget: {fileID: 4116728285300917064, guid: a7057ca84fc42b04dafb78b52d414ff3, type: 3}
   enhancementTypePotency: {fileID: 21300000, guid: 395f51c9f328ed0489446447ba66f8df, type: 3}
   enhancementTypeFocus: {fileID: 21300000, guid: a9171d3c998978f41b68f34f5dcc5841, type: 3}
   enhancementTypeTimed: {fileID: 21300000, guid: 4f47af8c82fe1144d9bd4f5669ae7550, type: 3}
