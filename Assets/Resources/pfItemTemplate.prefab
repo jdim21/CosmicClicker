@@ -97,6 +97,7 @@ MonoBehaviour:
   titleText: {fileID: 58961540696014871}
   descriptionText: {fileID: 1579582731895787540}
   costText: {fileID: 58961539768586847}
+  currCost: 0
   itemIcon: {fileID: 7243206031440262168}
   itemType: 0
 --- !u!1 &58961539768586845
@@ -134,7 +135,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -9, y: -18}
+  m_AnchoredPosition: {x: 5, y: -18}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &58961539768586846
@@ -345,7 +346,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 7, y: 21}
+  m_AnchoredPosition: {x: 22, y: 21}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &58961540696014870

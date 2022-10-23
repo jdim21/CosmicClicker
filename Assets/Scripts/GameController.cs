@@ -3,14 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameController : MonoBehaviour
 {
     private const float CLICKABLE_SPAWN_BOUNDARY_X = 6.8f;
     private const float CLICKABLE_SPAWN_BOUNDARY_Y = 3.25f;
     private const int BASE_HEALTH = 100;
+    private const int LOOT_BAG_ENHANCEMENT_DROP_CHANCE_PERCENT = 70;
     private const float LOOT_BAG_FADE_TIMER_MAX = 4.0f;
     private const float AUTO_CLICKER_DAMAGE_TIMER_MAX = 1.0f;
+    private const float TIMED_ENHANCEMENT_TIMER_MAX = 1.0f;
+    private const float TIMED_ENHANCEMENT_MULTIPLIER = 6.0f;
     private Transform currentClickable;
     private Transform currentLootBag;
     private Transform currentBonusLootBag;
@@ -19,6 +23,7 @@ public class GameController : MonoBehaviour
     public BigBombManager bigBombManager;
     public BonusOnSpawnManager bonusOnSpawnManager;
     public DamagePerClickManager damagePerClickManager;
+    public EnhancementManager enhancementManager;
     public HealthBarController healthBarController;
     public ScoreManager scoreManager;
     
@@ -31,23 +36,40 @@ public class GameController : MonoBehaviour
     private Vector3 currentClickableVelocity;
     private float lootBagFlickerSpeed = 0.05f;
     private float autoClickerDamageTimer;
+    private float timedEnhancementTimer;
+    private float focusEnhancementTimer;
+    private float focusFireTimerMax;
 
     void Start()
     {
         lootBagFadeTimer = LOOT_BAG_FADE_TIMER_MAX;
         autoClickerDamageTimer = AUTO_CLICKER_DAMAGE_TIMER_MAX;
+        timedEnhancementTimer = TIMED_ENHANCEMENT_TIMER_MAX;
+        enhancementManager.SetEnhancementObjectsInactive();
+        focusFireTimerMax = 1.0f / (float)EnhancementManager.FOCUS_FIRE_BASE_DAMAGE_MULTIPLIER;
         SpawnNewClickable();
     }
 
     void Update()
     {
+        HandleTimedEnhancementTimer();
+
         HandleAutoClicker();
 
         HandleClickableMovement();
 
         HandleNewClick();
 
+        HandleHeldClick();
+
         HandleLootBag();
+    }
+
+    private void HandleTimedEnhancementTimer()
+    {
+        timedEnhancementTimer -= Time.deltaTime;
+        float timeSliderValue = 1.0f - timedEnhancementTimer;
+        enhancementManager.SetEnhancementSlotTimerSliderValue(timeSliderValue);
     }
 
     private void HandleCurrentClickableDestroyed()
@@ -102,11 +124,47 @@ public class GameController : MonoBehaviour
                 spawnLocation.z = -1;
                 DamagePopup.Create(spawnLocation, currDamagePerClick);
                 healthBarController.Damage(currDamagePerClick);
+                if (enhancementManager.IsEnhancementEquipped())
+                { 
+                    if (enhancementManager.GetEnhancementType() == Enhancements.EnhancementType.Potency)
+                    {
+                        int currEnhancementDamage = enhancementManager.GetCurrentEnhancementBaseDamage();
+                        scoreManager.addToScore((int)Math.Min((float)currEnhancementDamage, (float)healthBarController.GetHealth()));
+                        Vector3 enhancementSpawnLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                        enhancementSpawnLocation.x += 0.25f;
+                        enhancementSpawnLocation.z = -1;
+                        DamagePopup.Create(enhancementSpawnLocation, currEnhancementDamage, true);
+                        healthBarController.Damage(currEnhancementDamage);
+                    }
+                    else if (enhancementManager.GetEnhancementType() == Enhancements.EnhancementType.Timed)
+                    {
+                        if (timedEnhancementTimer <= 0f)
+                        {
+                            clicksTotal += (int)TIMED_ENHANCEMENT_MULTIPLIER - 1;
+                            clicksTotalCurrClickable += (int)TIMED_ENHANCEMENT_MULTIPLIER - 1;
+                            int currEnhancementDamage = (int)((float)enhancementManager.GetCurrentEnhancementBaseDamage() * TIMED_ENHANCEMENT_MULTIPLIER);
+                            scoreManager.addToScore((int)Math.Min((float)currEnhancementDamage, (float)healthBarController.GetHealth()));
+                            Vector3 enhancementSpawnLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                            enhancementSpawnLocation.x += 0.25f;
+                            enhancementSpawnLocation.z = -1;
+                            DamagePopup.Create(enhancementSpawnLocation, currEnhancementDamage, true);
+                            healthBarController.Damage(currEnhancementDamage);
+                        }
+                        else
+                        {
+                            Vector3 enhancementSpawnLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                            enhancementSpawnLocation.x += 0.25f;
+                            enhancementSpawnLocation.z = -1;
+                            DamagePopup.Create(enhancementSpawnLocation, 0, true);
+                        }
+                    }
+                }
                 
                 if (healthBarController.IsDestroyed())
                 {
                     HandleCurrentClickableDestroyed();
                 }
+                timedEnhancementTimer = TIMED_ENHANCEMENT_TIMER_MAX;
             }
             else if (currentLootBag != null &&
                 hit.collider == currentLootBag.GetComponent<PolygonCollider2D>()) 
@@ -117,6 +175,57 @@ public class GameController : MonoBehaviour
                 Vector3 spawnLocation = currentLootBag.position;
                 LootBagPopup.Create(spawnLocation, "+" + randUpgradeDamage.ToString() + " DPC");
                 Destroy(currentLootBag.gameObject);
+
+                if (enhancementManager.IsEnhancementDrop())
+                {
+                    // SetEnahncementDropCanvasValues();
+                    enhancementManager.SetEnhancementDropCanvasValues();
+                    enhancementManager.SetDropCanvasActive(true);
+                    // enhancementDropCanvas.gameObject.SetActive(true);
+                }
+            }
+        }
+    }
+
+    private void HandleHeldClick()
+    {
+        if(Input.GetMouseButton(0))
+        {
+            if (enhancementManager.IsEnhancementEquipped() && enhancementManager.GetEnhancementType() == Enhancements.EnhancementType.Focus)
+            { 
+                
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+                if (currentClickable != null &&
+                    hit.collider == currentClickable.GetComponent<PolygonCollider2D>()) 
+                {
+                    focusEnhancementTimer -= Time.deltaTime;
+                    if (focusEnhancementTimer <= 0)
+                    {
+                        clicksTotal++;
+                        clicksTotalCurrClickable++;
+                        int currDamagePerClick = damagePerClickManager.GetDamagePerClick();
+                        scoreManager.addToScore((int)Math.Min((float)currDamagePerClick, (float)healthBarController.GetHealth()));
+                        Vector3 spawnLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                        spawnLocation.z = -1;
+                        DamagePopup.Create(spawnLocation, currDamagePerClick);
+                        healthBarController.Damage(currDamagePerClick);
+
+                        int currEnhancementDamage = enhancementManager.GetCurrentEnhancementBaseDamage();
+                        scoreManager.addToScore((int)Math.Min((float)currEnhancementDamage, (float)healthBarController.GetHealth()));
+                        Vector3 enhancementSpawnLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                        enhancementSpawnLocation.x += 0.25f;
+                        enhancementSpawnLocation.z = -1;
+                        DamagePopup.Create(enhancementSpawnLocation, currEnhancementDamage, true);
+                        healthBarController.Damage(currEnhancementDamage);
+                        if (healthBarController.IsDestroyed())
+                        {
+                            HandleCurrentClickableDestroyed();
+                        }
+
+                        focusEnhancementTimer = focusFireTimerMax;
+                    }
+                }
             }
         }
     }
@@ -157,8 +266,10 @@ public class GameController : MonoBehaviour
             int autoClickerDamagePerSecond = autoClickerManager.GetAutoClickerDamagerPerSecond();
             if (autoClickerDamagePerSecond > 0)
             {
-                clicksTotal++;
-                clicksTotalCurrClickable++;
+                // TODO: count these as clicks? I think not since it is better for fewer clicks to be counted than too many:w
+
+                // clicksTotal++;
+                // clicksTotalCurrClickable++;
                 scoreManager.addToScore((int)Math.Min((float)autoClickerDamagePerSecond, (float)healthBarController.GetHealth()));
                 Vector3 spawnLocation = currentClickable.position;
                 DamagePopup.Create(spawnLocation, autoClickerDamagePerSecond);
@@ -256,7 +367,7 @@ public class GameController : MonoBehaviour
         clicksTotalCurrClickable = 0;
         if (bonusOnSpawnManager.GetBonusOnSpawn() > 0)
         {
-            HandleBonusOnSpawn();
+            Invoke("HandleBonusOnSpawn", 0.3f);
         }
     }
 
@@ -267,7 +378,7 @@ public class GameController : MonoBehaviour
         int bonusOnSpawnDamage = bonusOnSpawnManager.GetBonusOnSpawn();
         scoreManager.addToScore((int)Math.Min((float)bonusOnSpawnDamage, (float)healthBarController.GetHealth()));
         Vector3 bonusOnSpawnLocation = currentClickable.position;
-        DamagePopup.Create(bonusOnSpawnLocation, bonusOnSpawnDamage);
+        DamagePopup.Create(bonusOnSpawnLocation, bonusOnSpawnDamage, true);
         healthBarController.Damage(bonusOnSpawnDamage);
         
         if (healthBarController.IsDestroyed())
@@ -299,6 +410,67 @@ public class GameController : MonoBehaviour
         return nextClickableHealth;
     }
 
+    public void ScrapEnhancementDrop()
+    {
+        // enhancementDropCanvas.gameObject.SetActive(false);
+        enhancementManager.SetDropCanvasActive(false);
+        enhancementManager.SetNoRoll();
+    }
+
+    public void EquipEnhancementDrop()
+    {
+        enhancementManager.SetDropCanvasActive(false);
+        enhancementManager.SetEnhancementSlotActive(true);
+        Enhancements.EnhancementType rolledType = enhancementManager.GetRolledType();
+        if (rolledType == Enhancements.EnhancementType.Potency)
+        {
+            enhancementManager.SetEnhancementSlotSprite(GameAssets.i.enhancementTypePotency);
+            enhancementManager.SetEnhancementSlotTimerSliderActive(false);
+        }
+        else if (rolledType == Enhancements.EnhancementType.Focus)
+        {
+            enhancementManager.SetEnhancementSlotSprite(GameAssets.i.enhancementTypeFocus);
+            enhancementManager.SetEnhancementSlotTimerSliderActive(false);
+        }
+        else if (rolledType == Enhancements.EnhancementType.Timed)
+        {
+            enhancementManager.SetEnhancementSlotSprite(GameAssets.i.enhancementTypeTimed);
+            enhancementManager.SetEnhancementSlotTimerSliderActive(true);
+        }
+        else if (rolledType == Enhancements.EnhancementType.Precision)
+        {
+            enhancementManager.SetEnhancementSlotSprite(GameAssets.i.enhancementTypePrecision);
+            enhancementManager.SetEnhancementSlotTimerSliderActive(false);
+        }
+        enhancementManager.SetEnhancementSlotSpriteActive(true);
+
+        Enhancements.EnhancementQuality rolledQuality = enhancementManager.GetRolledQuality();
+        if (rolledQuality == Enhancements.EnhancementQuality.Legendary)
+        {
+            enhancementManager.SetEnhancementSlotQualitySprite(GameAssets.i.enhancementQualityLegendary);
+        }
+        else if (rolledQuality == Enhancements.EnhancementQuality.Epic)
+        {
+            enhancementManager.SetEnhancementSlotQualitySprite(GameAssets.i.enhancementQualityEpic);
+        }
+        else if (rolledQuality == Enhancements.EnhancementQuality.Rare)
+        {
+            enhancementManager.SetEnhancementSlotQualitySprite(GameAssets.i.enhancementQualityRare);
+        }
+        else if (rolledQuality == Enhancements.EnhancementQuality.Uncommon)
+        {
+            enhancementManager.SetEnhancementSlotQualitySprite(GameAssets.i.enhancementQualityUncommon);
+        }
+        else if (rolledQuality == Enhancements.EnhancementQuality.Common)
+        {
+            enhancementManager.SetEnhancementSlotQualitySprite(GameAssets.i.enhancementQualityCommon);
+        }
+        enhancementManager.SetEnhancementSlotQualitySpriteActive(true);
+
+        enhancementManager.EquipRolledEnhancement();
+        enhancementManager.SetNoRoll();
+    }
+
     private void SpawnNewLootBag()
     {
         if (currentLootBag != null)
@@ -313,16 +485,23 @@ public class GameController : MonoBehaviour
         lootBagColor = currentLootBag.GetComponent<SpriteRenderer>().color;
         lootBagImage = currentLootBag.GetComponent<SpriteRenderer>();
 
-        if (currentBonusLootBag != null)
+        int enhancementRoll = UnityEngine.Random.Range(1, 101);
+        if (enhancementRoll <= LOOT_BAG_ENHANCEMENT_DROP_CHANCE_PERCENT)
         {
-            Destroy(currentBonusLootBag.gameObject);
+            int currDamagePerClick = damagePerClickManager.GetDamagePerClick();
+            enhancementManager.RollNewEnhancement(currDamagePerClick);
         }
-        Vector3 bonusSpawnLocation = spawnLocation;
-        bonusSpawnLocation.x = bonusSpawnLocation.x + 0.25f;
-        // TODO: do random stuff
-        if (true)
-        {
-            currentBonusLootBag = Instantiate(GameAssets.i.pfLootBag, bonusSpawnLocation, Quaternion.identity); 
-        }
+
+        // if (currentBonusLootBag != null)
+        // {
+        //     Destroy(currentBonusLootBag.gameObject);
+        // }
+        // Vector3 bonusSpawnLocation = spawnLocation;
+        // bonusSpawnLocation.x = bonusSpawnLocation.x + 0.25f;
+        // // TODO: do random stuff
+        // if (true)
+        // {
+        //     currentBonusLootBag = Instantiate(GameAssets.i.pfLootBag, bonusSpawnLocation, Quaternion.identity); 
+        // }
     }
 }

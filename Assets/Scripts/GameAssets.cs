@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameAssets : MonoBehaviour
 {
     public Transform pfDamagePopup;
+    public Transform pfEnhancementPopup;
     public Transform pfMashedPotatoes;
     public Transform pfCottonCandyPlanet;
     public Transform pfBlueGreenPlanet;
@@ -20,6 +22,15 @@ public class GameAssets : MonoBehaviour
     public Transform pfLootBagText;
     public Transform pfComet1;
     public Transform pfAsteroid1;
+    public Sprite enhancementTypePotency;
+    public Sprite enhancementTypeFocus;
+    public Sprite enhancementTypeTimed;
+    public Sprite enhancementTypePrecision;
+    public Sprite enhancementQualityLegendary;
+    public Sprite enhancementQualityEpic;
+    public Sprite enhancementQualityRare;
+    public Sprite enhancementQualityUncommon;
+    public Sprite enhancementQualityCommon;
 
     private static GameAssets _i;
 

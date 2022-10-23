@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pfDamagePopup: {fileID: 2154244818543483880, guid: d2279605696e3734a9a397c5d50af4cb, type: 3}
+  pfEnhancementPopup: {fileID: 2154244818543483880, guid: f3615f45962073640846c73b87acf657, type: 3}
   pfMashedPotatoes: {fileID: 4116728285300917064, guid: 371b2b8464d687043a297d4be95210b1, type: 3}
   pfCottonCandyPlanet: {fileID: 4116728285300917064, guid: 1d7272256d683b24abc1548e779c1163, type: 3}
   pfBlueGreenPlanet: {fileID: 4116728285300917064, guid: 790c146e2999d1a449a6f57cf109e4ac, type: 3}
@@ -60,3 +61,12 @@ MonoBehaviour:
   pfLootBagText: {fileID: 2154244818543483880, guid: d83c6037eec9eca4099212209d0f75cb, type: 3}
   pfComet1: {fileID: 4116728285300917064, guid: d8befbaaf2597de4593b9abbb0355fe7, type: 3}
   pfAsteroid1: {fileID: 4116728285300917064, guid: f5e6c79e4682a474295f17c9b1a1078b, type: 3}
+  enhancementTypePotency: {fileID: 21300000, guid: 395f51c9f328ed0489446447ba66f8df, type: 3}
+  enhancementTypeFocus: {fileID: 21300000, guid: a9171d3c998978f41b68f34f5dcc5841, type: 3}
+  enhancementTypeTimed: {fileID: 21300000, guid: 4f47af8c82fe1144d9bd4f5669ae7550, type: 3}
+  enhancementTypePrecision: {fileID: 21300000, guid: d1174145cbc214d46b799ec9f20914da, type: 3}
+  enhancementQualityLegendary: {fileID: 21300000, guid: 7b11f901007eee24f853717c134b160e, type: 3}
+  enhancementQualityEpic: {fileID: 21300000, guid: 66d0997418962ea40b929480ec92483e, type: 3}
+  enhancementQualityRare: {fileID: 21300000, guid: bbe87924de5b4f94288c4b2e717e8172, type: 3}
+  enhancementQualityUncommon: {fileID: 21300000, guid: 1052882ba838bdd4088c0bfaa3aeee7f, type: 3}
+  enhancementQualityCommon: {fileID: 21300000, guid: 6aa874112b9d77447a71d0655fb119a1, type: 3}

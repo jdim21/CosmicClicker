@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2154244818543483886}
   - component: {fileID: 6096338616119866151}
   m_Layer: 5
-  m_Name: pfDamagePopup
+  m_Name: pfEnhancementPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,8 +110,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 1694499071
-  m_fontColor: {r: 1, g: 0, b: 0, a: 0.39607844}
+    rgba: 3135884388
+  m_fontColor: {r: 0.3927999, g: 0.8014497, b: 0.9150943, a: 0.7294118}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

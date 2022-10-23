@@ -20,6 +20,8 @@ public class ShopManager : MonoBehaviour, IPointerClickHandler
     private ShopTemplate currItemTemplate;
     public AutoClickerManager autoClickerManager;
     public BigBombManager bigBombManager;
+    public DamagePerClickManager damagePerClickManager;
+    public EnhancementManager enhancementManager;
     public BonusOnSpawnManager bonusOnSpawnManager;
     public ScoreManager scoreManager;
 
@@ -40,7 +42,6 @@ public class ShopManager : MonoBehaviour, IPointerClickHandler
 
     public void Purchase()
     {
-        Debug.Log("Purchase() called with currItemType: " + currItemType.ToString());
         int costOfPurchase = 0;
         if (currItemType == ShopItemDataSO.ItemTypes.AutoClick)
         {
@@ -66,6 +67,17 @@ public class ShopManager : MonoBehaviour, IPointerClickHandler
             bigBombManager.AddBigBomb();
             currItemCost.text = "COST: " + bigBombManager.GetCurrentCost().ToString();
             currItemTemplate.currCost = bigBombManager.GetCurrentCost();
+        }
+        else if (currItemType == ShopItemDataSO.ItemTypes.EnhancementLootDrop)
+        {
+            costOfPurchase = enhancementManager.GetCurrentCost();
+            enhancementManager.IncreaseCost(scoreManager.GetScore());
+            currItemTemplate.currCost = costOfPurchase;
+            enhancementManager.RollNewEnhancement(damagePerClickManager.GetDamagePerClick());
+            enhancementManager.SetEnhancementDropCanvasValues();
+            enhancementManager.SetDropCanvasActive(true);
+            currItemCost.text = "COST: " + enhancementManager.GetCurrentCost().ToString();
+            currItemTemplate.currCost = costOfPurchase;
         }
         scoreManager.SubFromScore(costOfPurchase);
         CheckPurchasable();
@@ -119,7 +131,6 @@ public class ShopManager : MonoBehaviour, IPointerClickHandler
     {
         if (currItemTemplate != null && scoreManager.GetScore() >= currItemTemplate.currCost)
         {
-            Debug.Log("score, currCost: " + scoreManager.GetScore() + ", " + currItemTemplate.currCost.ToString());
             purchaseButton.interactable = true;
         }
         else

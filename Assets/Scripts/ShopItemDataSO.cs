@@ -18,6 +18,7 @@ public class ShopItemDataSO : ScriptableObject
         AutoClick,
         BonusOnSpawn,
         BigBomb,
+        EnhancementLootDrop,
     }
     
 }
